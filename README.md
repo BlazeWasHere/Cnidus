@@ -40,6 +40,7 @@ int main() {
 
 # Compile
 This probably isn't the most ideal to do.
+
 ```sh
 $ make
 [...]
