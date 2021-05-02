@@ -5,9 +5,9 @@ Pronounced as *see-nay-dhus*.
 # Info
 Cnidus is a web framework in C based on [liburing](https://github.com/axboe/liburing), which requires Linux Kernel 5.1+.
 
-Cnidus is still a work in progress, and is **not** production ready, as it probably contains a ton of bugs. An example of usage can be found [here](https://github.com/BlazeWasHere/Cnidus/src/main.c).
+Cnidus is still a work in progress, and is **not** production ready, as it probably contains a ton of bugs. An example of usage can be found [here](https://github.com/BlazeWasHere/Cnidus/blob/master/src/main.c).
 
-Cnidus aims to be a simple interface to create REST APISs and static file serving, using an asynchrious i/o framework as the backend. A quick example:
+Cnidus aims to be a simple interface to create REST APISs and static file serving, using an asynchronous I/O framework as the backend. A quick example:
 
 ```c
 #include <signal.h>
@@ -47,6 +47,24 @@ $ make
 $ ./cnidus
 ```
 Then visit [localhost](http://localhost:1337)
+
+# Tests
+```sh
+# in project root (make sure cnidus is built and the objects exist)
+$ make
+$ cd tests
+$ make
+$ ./tests
+[==========] tests: Running 3 test(s).
+[ RUN      ] null_test_success
+[       OK ] null_test_success
+[ RUN      ] test_size_dict_new
+[       OK ] test_size_dict_new
+[ RUN      ] test_dict_add_find
+[       OK ] test_dict_add_find
+[==========] tests: 3 test(s) run.
+[  PASSED  ] 3 test(s).
+```
 
 # Benchmarks
 Benchmarks using [ab](https://httpd.apache.org/docs/2.4/programs/ab.html) with cnidus v0.0.1.
@@ -229,4 +247,4 @@ On the TODO list.
   - More example usages.
 
 # License
-[BSL-1.0 License](https://github.com/BlazeWasHere/Cnidus/LICENSE)
+[BSL-1.0 License](https://github.com/BlazeWasHere/Cnidus/blob/master/LICENSE)
