@@ -3,4 +3,4 @@ server
 test.c
 .vscode
 cnidus
-tests/tests
+tests/bin

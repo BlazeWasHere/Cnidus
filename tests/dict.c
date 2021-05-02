@@ -11,8 +11,6 @@
 // END CMOCKA DEPS...
 #include <cmocka.h>
 
-#include <stdio.h>
-
 #include "dict.h"
 
 void fn(context *ctx) {

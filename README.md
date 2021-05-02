@@ -54,7 +54,11 @@ Then visit [localhost](http://localhost:1337)
 $ make
 $ cd tests
 $ make
-$ ./tests
+$ chmod +x tests.sh
+$ ./tests.sh
+[...]
+testing bin/dict...
+
 [==========] tests: Running 3 test(s).
 [ RUN      ] null_test_success
 [       OK ] null_test_success
@@ -64,6 +68,17 @@ $ ./tests
 [       OK ] test_dict_add_find
 [==========] tests: 3 test(s) run.
 [  PASSED  ] 3 test(s).
+
+testing bin/mime...
+
+[==========] tests: Running 2 test(s).
+[ RUN      ] test_mime_string_empty
+[       OK ] test_mime_string_empty
+[ RUN      ] test_mime_string_all
+[       OK ] test_mime_string_all
+[==========] tests: 2 test(s) run.
+[  PASSED  ] 2 test(s)
+[...]
 ```
 
 # Benchmarks

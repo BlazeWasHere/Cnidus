@@ -1,10 +1,10 @@
 CFLAGS ?= -O2 -lcmocka
 LFLAGS ?= -shared
 
-OBJ := object
+BIN := bin
 
 SOURCES := $(wildcard *.c)
-OBJECTS := $(patsubst %.c, $(OBJ)/%.o, $(SOURCES))
+BINS := $(patsubst %.c, %, $(SOURCES))
 
 ifeq ($(PREFIX),)
     PREFIX := /usr/local
@@ -13,13 +13,10 @@ endif
 INCLUDEDIR ?= $(PREFIX)/include
 LIBDIR ?= $(PREFIX)/lib
 
-tests: $(OBJECTS)
-	$(CC) ../$^ $^ -o $@ ${CFLAGS}
-
-$(OBJ)/%.o: *.c
-	$(CC) -I../src/include -c $< -o $@ ${CFLAGS}
+$(BINS)/: *.c
+	$(CC) -I../src/include ../object/$@.o $< -o $(BIN)/$@ ${CFLAGS}
 
 clean:
-	@rm -r ${OBJ}
-	@mkdir ${OBJ}
-	@rm tests
+	@rm -r ${BIN}
+	@mkdir ${BIN}
+	@rm bin
