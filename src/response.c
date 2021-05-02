@@ -25,7 +25,7 @@ void respond(int socket, const char *text, STATUS status, MIME_TYPE mime) {
 
     sprintf(str + strlen(str), "content-length: %ld\r\n", text_len);
     
-    char *content_type = malloc(100);
+    char *content_type = calloc(1, 100);
     
     strcat(content_type, "content-type: ");
     strcat(content_type, mime_string(mime));

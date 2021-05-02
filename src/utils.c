@@ -37,7 +37,7 @@ int get_line(const char *src, char *dest, int dest_sz) {
 }
 
 http_metadata *parse_http_line(char *http_line) {
-    http_metadata *metadata = malloc(sizeof(metadata));
+    http_metadata *metadata = malloc(sizeof(http_metadata));
     char *token, *str;
     uint32_t count = 0;
 

@@ -16,7 +16,7 @@
 #include "dict.h"
 #include "jsmn.h"
 
-#define READ_BUFFER     4096
+#define READ_BUFFER     1024
 #define BACKLOG         4096
 
 // global ring
@@ -130,12 +130,10 @@ void add_read_request(int client_socket) {
     struct io_uring_sqe *sqe = io_uring_get_sqe(&ring);
 
     req->iovec_count = 1;
-    req->iov[0].iov_base = malloc(READ_BUFFER);
+    req->iov[0].iov_base = calloc(1, READ_BUFFER);
     req->iov[0].iov_len = READ_BUFFER;
     req->event_type = READ;
     req->client_socket = client_socket;
-
-    memset(req->iov[0].iov_base, 0, READ_BUFFER);
 
     io_uring_prep_readv(sqe, client_socket, &req->iov[0], 1, 0);
     io_uring_sqe_set_data(sqe, req);
@@ -143,14 +141,19 @@ void add_read_request(int client_socket) {
 }
 
 void handle_client_request(struct request *req, struct sockaddr_in *client) {
-    char http_request[1024] = {0};
+    char *http_request = calloc(1, READ_BUFFER);
 
     /* Get the first line, which will be the request, we should error out */
-    if (get_line(req->iov[0].iov_base, http_request, sizeof(http_request))) {
+    if (get_line(req->iov[0].iov_base, http_request, READ_BUFFER)) {
         printf("Malformed request\nGot: %s\n", http_request);
+        
+        // drop the connection
+        req->event_type = WRITE;
+        return;
     }
 
     handle_http_method(http_request, req->client_socket, client, &routes);
+    free(http_request);
 }
 
 void add_write_request(struct request *req) {

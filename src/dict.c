@@ -39,8 +39,8 @@ void dict_add(dict_t dict, const char *key, callback_t value) {
 }
 
 dict_t dict_new(void) {
-    dict_s proto = {0, 10, malloc(10 * sizeof(dict_entry_s))};
-    dict_t d = malloc(sizeof(dict_s));
+    dict_s proto = {0, 10, calloc(10, sizeof(dict_entry_s))};
+    dict_t d = calloc(1, sizeof(dict_s));
     *d = proto;
     return d;
 }

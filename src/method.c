@@ -6,7 +6,6 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h> /* printf */
 
 #include "method.h"
 
@@ -20,8 +19,10 @@ int handle_http_method(
     http_metadata *metadata = parse_http_line(path);
     to_lower(metadata->method);
 
-    if (!metadata->method)
+    if (!metadata->method) {
+        free(metadata);
         return -1;
+    }
 
     // check if path exists in routes
     to_lower(metadata->path);
