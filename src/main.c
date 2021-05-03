@@ -19,7 +19,7 @@
 
 static void home(context *ctx) {
     const char *res = "welcome to cnidus!";
-    respond(ctx->socket, res, sizeof(res), OK, txt);
+    respond(ctx->socket, ctx->path, res, sizeof(res), OK, txt);
 }
 
 static void license(context *ctx) {
@@ -36,7 +36,7 @@ static void license(context *ctx) {
         // you should handle possible errors from the return of read_file
         read_file(file_name, buffer, ret);
         
-        respond(ctx->socket, buffer, ret, OK, txt);
+        respond(ctx->socket, ctx->path, buffer, ret, OK, txt);
         free(buffer);
     }
 }
