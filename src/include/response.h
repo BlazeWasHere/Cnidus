@@ -18,6 +18,6 @@ typedef struct {
     MIME_TYPE mine;
 } response;
 
-void respond(int socket, const char *text, STATUS status, MIME_TYPE mime);
+void respond(int socket, const char *text, size_t size, STATUS status, MIME_TYPE mime);
 void respond_with_response(response *res);
 void respond_not_found(int socket);

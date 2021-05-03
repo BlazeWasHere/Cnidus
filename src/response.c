@@ -12,8 +12,10 @@
 #include "status.h"
 #include "server.h"
 
-void respond(int socket, const char *text, STATUS status, MIME_TYPE mime) {
+void respond(int socket, const char *text, size_t size, STATUS status, MIME_TYPE mime) {
     char *str = handle_status(status);
+    // TODO: terrible to be hardcoding here.
+    str = realloc(str, size + 100);
 
     if (str == NULL) {
         fprintf(stderr, "Unsupported HTTP Status code: %d\n", status);

@@ -22,8 +22,9 @@ Cnidus aims to be a simple interface to create REST APISs and static file servin
 #define PORT 1337
 #define ENTRIES 256
 
-void home(context *ctx) {
-    respond(ctx->socket, "welcome to cnidus!", OK, txt);
+static void home(context *ctx) {
+    const char *res = "welcome to cnidus!";
+    respond(ctx->socket, res, sizeof(res), OK, txt);
 }
 
 int main() {
