@@ -54,8 +54,6 @@ Then visit [localhost](http://localhost:1337)
 $ make
 $ cd tests
 $ make
-$ chmod +x tests.sh
-$ ./tests.sh
 [...]
 testing bin/dict...
 
