@@ -13,9 +13,10 @@
 #include "server.h"
 
 
-void error(const char* str, int ret, int code) {
-    if (ret == code)
+void error(const char *str, int ret, int code) {
+    if (ret == code) {
         perror(str);
+    }
 }
 
 void sigint_handler(int signal) {

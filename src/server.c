@@ -149,6 +149,7 @@ void handle_client_request(struct request *req, struct sockaddr_in *client) {
         
         // drop the connection
         req->event_type = WRITE;
+        free(http_request);
         return;
     }
 

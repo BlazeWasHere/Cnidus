@@ -258,6 +258,9 @@ On the TODO list.
   - Static file serving.
   - Write some tests.
   - More example usages.
+  - Cache.
+  - Make Cnidus as a shared library.
+  - Finish the JSON parsing (jsmn)
 
 # License
 [BSL-1.0 License](https://github.com/BlazeWasHere/Cnidus/blob/master/LICENSE)

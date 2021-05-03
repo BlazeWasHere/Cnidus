@@ -19,7 +19,7 @@ int handle_http_method(
     http_metadata *metadata = parse_http_line(path);
     to_lower(metadata->method);
 
-    if (!metadata->method) {
+    if (!metadata->method || !metadata->path) {
         free(metadata);
         return -1;
     }

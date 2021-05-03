@@ -11,7 +11,7 @@
 #define HTTP_VERSION "HTTP/1.0 "
 
 char *handle_status(STATUS status) {
-    char *str = malloc(300);
+    char *str = malloc(50);
 
     strcpy(str, HTTP_VERSION);
 

@@ -1,6 +1,6 @@
-object
+object/**
 server
 test.c
 .vscode
 cnidus
-tests/bin
+tests/bin/**
