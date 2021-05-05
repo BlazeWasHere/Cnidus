@@ -20,8 +20,12 @@ int handle_http_method(
 /**
  * handle the GET http method.
  */
-void get();
+void get(context *ctx, callback_t callback);
 /**
  * Converts the enum `http_method` to a human readable string
  */
 const char *http_method_to_string(http_method method);
+/**
+ * handle the POST http method.
+ */
+void post(context *ctx, callback_t callback);

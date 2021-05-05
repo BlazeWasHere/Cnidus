@@ -59,3 +59,5 @@ static int cache_find_index(char *route) {
 
     return -1;
 }
+
+void respond_not_implemented(int socket);

@@ -24,9 +24,9 @@ int handle_http_method(
         return -1;
     }
 
-    char *key = calloc(1, strlen(metadata->path) + strlen(metadata->version));
+    char *key = calloc(1, strlen(metadata->path) + strlen(metadata->method));
     to_lower(metadata->method);
-    
+
     concat(metadata->method, metadata->path, key);
 
     // check if we have the route cache'd
@@ -44,7 +44,14 @@ int handle_http_method(
             ctx->client = client;
             ctx->socket = socket;
 
-            ret(ctx);
+            if (strcmp(metadata->method, "get") == 0) {
+                get(ctx, ret);
+            } else if (strcmp(metadata->method, "post") == 0) {
+                post(ctx, ret);
+            } else {
+                respond_not_implemented(socket);
+            }
+
             free(ctx);
         } else {
             // 404
@@ -79,4 +86,12 @@ const char *http_method_to_string(http_method method) {
         default:
             return NULL;
     }
+}
+
+void get(context *ctx, callback_t callback) {
+    callback(ctx);
+}
+
+void post(context *ctx, callback_t callback) {
+    callback(ctx);
 }

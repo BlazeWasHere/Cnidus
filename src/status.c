@@ -23,6 +23,9 @@ char *handle_status(STATUS status) {
         case NOT_FOUND:
             strcat(str, "404 Not Found");
             break;
+        case NOT_IMPLEMENTED:
+            strcat(str, "Not Implemented");
+            break;
         default:
             return NULL;
     }

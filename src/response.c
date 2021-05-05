@@ -97,3 +97,22 @@ void _cache(char *route, char *text, size_t len) {
 
     routes_cache.cache[routes_cache.count++] = cache;
 }
+
+void respond_not_implemented(int socket) {
+    // all hardcoded stuff here.
+
+    struct request *req = malloc(sizeof(*req) + sizeof(struct iovec));
+    const char *str = "HTTP/1.0 501 Not Implemented\r\n"
+                "\r\n"
+                "Not Implemented";
+    
+    size_t len = strlen(str);
+
+    req->iovec_count = 1;
+    req->client_socket = socket;
+    req->iov[0].iov_base = malloc(len);
+    req->iov[0].iov_len = len;
+    memcpy(req->iov[0].iov_base, str, len);
+
+    add_write_request(req);
+}
