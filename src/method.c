@@ -19,19 +19,22 @@ int handle_http_method(
 ) {
     http_metadata *metadata = parse_http_line(path);
 
-    if (!metadata->method || !metadata->path) {
+    if (!metadata->method || !metadata->path || !metadata->version) {
         free(metadata);
         return -1;
     }
 
+    char *key = calloc(1, strlen(metadata->path) + strlen(metadata->version));
     to_lower(metadata->method);
+    
+    concat(metadata->method, metadata->path, key);
 
     // check if we have the route cache'd
-    int idx = cache_find_index(metadata->path);
+    int idx = cache_find_index(key);
 
     if (idx == -1) {
         // call the callback
-        callback_t ret = dict_find(*routes, metadata->path);
+        callback_t ret = dict_find(*routes, key);
 
         if (ret != NULL) {
             context *ctx = malloc(sizeof(context));
@@ -62,6 +65,18 @@ int handle_http_method(
     }
 
     free(metadata);
+    free(key);
 
     return 0;
+}
+
+const char *http_method_to_string(http_method method) {
+    switch (method) {
+        case GET:
+            return "get";
+        case POST:
+            return "post";
+        default:
+            return NULL;
+    }
 }

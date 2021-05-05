@@ -52,8 +52,8 @@ int main() {
         exit(1);
     }
 
-    add_route("/", home);
-    add_route("/license", license);
+    add_route(GET, "/", home);
+    add_route(GET, "/license", license);
 
     printf("Listening at http://localhost:%d\n", PORT);
 

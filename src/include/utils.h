@@ -32,3 +32,7 @@ http_metadata *parse_http_line(char *http_line);
  * Convert char to lower, by modifying the pointer
  */
 void to_lower(char *str);
+/**
+ * Join first and second to result
+ */
+void concat(char *first, char *second, char *result);

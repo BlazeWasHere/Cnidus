@@ -167,13 +167,19 @@ void add_write_request(struct request *req) {
     io_uring_submit(&ring);
 }
 
-int add_route(const char *path, callback_t value) {
+int add_route(http_method method, const char *path, callback_t value) {
     if (isSetup == 0) {
         fprintf(stderr, "setup_context() has not been called.\n");
         return -1;
     }
 
-    dict_add(routes, path, value);
+    const char *method_str = http_method_to_string(method);
+    char *key = calloc(1, strlen(path) + strlen(method_str));
+    concat((char*)method_str, (char*)path, key);
+
+    dict_add(routes, key, value);
+
+    free(key);
 
     return 0;
 }

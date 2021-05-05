@@ -7,6 +7,7 @@
 
 #include <netinet/in.h>
 
+#include "server.h"
 #include "dict.h"
 
 /**
@@ -20,3 +21,7 @@ int handle_http_method(
  * handle the GET http method.
  */
 void get();
+/**
+ * Converts the enum `http_method` to a human readable string
+ */
+const char *http_method_to_string(http_method method);

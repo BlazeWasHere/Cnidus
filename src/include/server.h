@@ -22,6 +22,11 @@ struct request {
     struct iovec iov[];
 };
 
+typedef enum {
+    GET,
+    POST,
+} http_method;
+
 typedef void (*callback_t)(context*);
 
 int setup_context(uint32_t entries);
@@ -40,7 +45,7 @@ void add_write_request(struct request *req);
  * ```c
  *      void handle_foo(struct context ctx) { ... };
  *      ...
- *      add_route("/foo", handle_foo);
+ *      add_route(GET, "/foo", handle_foo);
  * ```
  */
-int add_route(const char *path, callback_t value);
+int add_route(http_method method, const char *path, callback_t value);

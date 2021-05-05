@@ -33,7 +33,7 @@ int main() {
     int socket = setup_socket(PORT);
     setup_context(ENTRIES);
 
-    add_route("/", home);
+    add_route(GET, "/", home);
 
     event_loop(socket);
 }

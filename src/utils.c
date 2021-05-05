@@ -72,3 +72,11 @@ void to_lower(char *str) {
     for (; *str; ++str)
         *str = (char)tolower(*str);
 }
+
+void concat(char *first, char *second, char *result) {
+    size_t x = strlen(first);
+    size_t y = strlen(second);
+
+    memcpy(result, first, x);
+    memcpy(result + x, second, y);
+}
