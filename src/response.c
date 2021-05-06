@@ -10,10 +10,9 @@
 #include "response.h"
 
 #include "status.h"
-#include "server.h"
 
 void respond(
-    int socket, char* path, const char *text, size_t size, 
+    context *ctx, const char *text, size_t size, 
     STATUS status, MIME_TYPE mime
 ) {
     char *str = handle_status(status);
@@ -45,11 +44,11 @@ void respond(
     req->iovec_count = 1;
     req->iov[0].iov_base = malloc(str_len);
     req->iov[0].iov_len = str_len;
-    req->client_socket = socket;
+    req->client_socket = ctx->socket;
     memcpy(req->iov[0].iov_base, str, str_len);
 
     add_write_request(req);
-    _cache(path, str, str_len);
+    _cache(ctx->__key, str, str_len);
 
     free(content_type);
     free(str);
@@ -90,7 +89,7 @@ void respond_not_found(int socket) {
 
 void _cache(char *route, char *text, size_t len) {
     cache_s cache = {
-        .route = route,
+        .route = strdup(route),
         .text = strdup(text),
         .len = len
     };

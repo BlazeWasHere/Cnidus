@@ -24,7 +24,7 @@ Cnidus aims to be a simple interface to create REST APISs and static file servin
 
 static void home(context *ctx) {
     const char *res = "welcome to cnidus!";
-    respond(ctx->socket, ctx->path, res, sizeof(res), OK, txt);
+    respond(ctx, res, sizeof(res), OK, txt);
 }
 
 int main() {

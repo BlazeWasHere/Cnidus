@@ -24,7 +24,7 @@ int handle_http_method(
         return -1;
     }
 
-    char *key = calloc(1, strlen(metadata->path) + strlen(metadata->method));
+    char *key = calloc(1, strlen(metadata->path) + strlen(metadata->method) + 1);
     to_lower(metadata->method);
 
     concat(metadata->method, metadata->path, key);
@@ -43,6 +43,7 @@ int handle_http_method(
             ctx->path = metadata->path;
             ctx->client = client;
             ctx->socket = socket;
+            ctx->__key = key;
 
             if (strcmp(metadata->method, "get") == 0) {
                 get(ctx, ret);

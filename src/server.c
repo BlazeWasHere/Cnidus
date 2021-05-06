@@ -174,7 +174,7 @@ int add_route(http_method method, const char *path, callback_t value) {
     }
 
     const char *method_str = http_method_to_string(method);
-    char *key = calloc(1, strlen(path) + strlen(method_str));
+    char *key = calloc(1, strlen(path) + strlen(method_str) + 1);
     concat((char*)method_str, (char*)path, key);
 
     dict_add(routes, key, value);

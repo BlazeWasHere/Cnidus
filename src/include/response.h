@@ -39,8 +39,7 @@ typedef struct {
 _cache_t routes_cache;
 
 void respond(
-    int socket, char* path, const char *text, size_t size, 
-    STATUS status, MIME_TYPE mime
+    context *ctx, const char *text, size_t size, STATUS status, MIME_TYPE mime
 );
 void respond_with_response(response *res);
 void respond_not_found(int socket);

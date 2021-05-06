@@ -19,7 +19,7 @@
 
 static void home(context *ctx) {
     const char *res = "welcome to cnidus!";
-    respond(ctx->socket, ctx->path, res, sizeof(res), OK, txt);
+    respond(ctx, res, sizeof(res), OK, txt);
 }
 
 static void license(context *ctx) {
@@ -36,9 +36,14 @@ static void license(context *ctx) {
         // you should handle possible errors from the return of read_file
         read_file(file_name, buffer, ret);
         
-        respond(ctx->socket, ctx->path, buffer, ret, OK, txt);
+        respond(ctx, buffer, ret, OK, txt);
         free(buffer);
     }
+}
+
+static void post(context *ctx) {
+    printf("received: %s\n", ctx->data);
+    respond(ctx, "hello", 6, OK, txt);
 }
 
 int main() {
@@ -54,6 +59,8 @@ int main() {
 
     add_route(GET, "/", home);
     add_route(GET, "/license", license);
+    add_route(POST, "/post", post);
+    add_route(GET, "/post", post);
 
     printf("Listening at http://localhost:%d\n", PORT);
 

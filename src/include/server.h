@@ -13,6 +13,8 @@ typedef struct {
     int socket;
     char *path;
     char *method;
+    char *data;
+    char *__key;
 } context;
 
 struct request {
