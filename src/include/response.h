@@ -21,6 +21,7 @@ typedef struct {
     size_t len;
 } cache_s;
 
+// struct representing the prepared response 
 typedef struct {
     int socket;
     char *headers;
@@ -30,6 +31,7 @@ typedef struct {
     MIME_TYPE mine;
 } response;
 
+// internal use; the routes cache struct
 typedef struct {
     int count;
     cache_s cache[CACHE_SIZE];
@@ -38,13 +40,17 @@ typedef struct {
 // cache the responses of routes
 _cache_t routes_cache;
 
+/* function to return a response to the socket */
 void respond(
     context *ctx, const char *text, size_t size, STATUS status, MIME_TYPE mime
 );
+/* function to return a prepared response to the socket */
 void respond_with_response(response *res);
+/* respond with a 404 NOT FOUND to the socket */
 void respond_not_found(int socket);
 void _cache(char *route, char *text, size_t len);
 
+/* find index of a key in the routes cache, returns -1 on failure */
 static int cache_find_index(char *route) {
     to_lower(route);
 
@@ -59,4 +65,5 @@ static int cache_find_index(char *route) {
     return -1;
 }
 
+/* respond with 501 NOT IMPLEMENTED to the socket */
 void respond_not_implemented(int socket);
