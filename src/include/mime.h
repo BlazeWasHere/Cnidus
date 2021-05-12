@@ -82,4 +82,12 @@ typedef enum {
     _7z     = 71,
 } MIME_TYPE;
 
+/**
+ * convert a MIME_TYPE enum value to a string 
+ * 
+ * ```c
+ *      mime_string(txt);
+ *      returns -> "text/plain\r\n"
+ * ```
+ */
 const char *mime_string(MIME_TYPE mime);

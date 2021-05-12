@@ -24,8 +24,17 @@ typedef struct dict_s {
     dict_entry_s *entry;
 } dict_s, *dict_t;
 
+/* search for the index of a key, returns -1 on failure */
 int dict_find_index(dict_t dict, const char *key);
+
+/* search for the value of a key, returns NULL on failure */
 callback_t dict_find(dict_t dict, const char *key);
+
+/* add the value with the specified key to the dict  */
 void dict_add(dict_t dict, const char *key, callback_t value);
+
+/* create and return a new dict */
 dict_t dict_new(void);
+
+/* remove all alloc'd memory, should be called when cleaning up memory */
 void dict_free(dict_t dict);
