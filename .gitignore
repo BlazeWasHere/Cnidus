@@ -4,3 +4,6 @@ test.c
 .vscode
 cnidus
 tests/bin/**
+.nvimlog
+.ccls
+.nvim

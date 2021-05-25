@@ -7,12 +7,7 @@
 #include <signal.h>
 #include <stdio.h>
 
-#include "response.h"
-#include "status.h"
-#include "server.h"
-#include "utils.h"
-#include "file.h"
-#include "mime.h"
+#include "cnidus.h"
 
 #define PORT 1337
 #define ENTRIES 256
