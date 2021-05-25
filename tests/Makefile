@@ -19,6 +19,7 @@ test: $(OBJECTS)
 	./tests.sh
 
 $(OBJ)/%: %.c
+	@mkdir -p $(OBJ)
 	$(CC) -I../src/include ../object/$(notdir $@).o $< -o $@ ${CFLAGS}
 
 clean:

@@ -18,6 +18,7 @@ cnidus: $(OBJECTS)
 	$(CC) $^ -o $@ ${CFLAGS}
 
 $(OBJ)/%.o: $(SRC)/%.c
+	@mkdir -p object
 	$(CC) -I$(SRC)/include -c $< -o $@ ${CFLAGS}
 
 clean:
