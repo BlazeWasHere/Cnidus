@@ -37,9 +37,6 @@ typedef struct {
     cache_s cache[CACHE_SIZE];
 } _cache_t;
 
-// cache the responses of routes
-_cache_t routes_cache;
-
 /* function to return a response to the socket */
 void respond(
     context *ctx, const char *text, size_t size, STATUS status, MIME_TYPE mime
@@ -51,19 +48,7 @@ void respond_not_found(int socket);
 void _cache(char *route, char *text, size_t len);
 
 /* find index of a key in the routes cache, returns -1 on failure */
-static int cache_find_index(char *route) {
-    to_lower(route);
-
-    for (int i = 0; i < CACHE_SIZE; i++) {
-        if (!routes_cache.cache[i].route) {
-            return -1;
-        } else if (!strcmp(routes_cache.cache[i].route, route)) {
-            return i;
-        }
-    }
-
-    return -1;
-}
+int cache_find_index(char *route);
 
 /* respond with 501 NOT IMPLEMENTED to the socket */
 void respond_not_implemented(int socket);

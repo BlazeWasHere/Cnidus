@@ -14,6 +14,8 @@
 #include "utils.h"
 #include "dict.h"
 
+extern _cache_t routes_cache;
+
 int handle_http_method(
     char *path, int socket, struct sockaddr_in *client,  dict_t *routes
 ) {

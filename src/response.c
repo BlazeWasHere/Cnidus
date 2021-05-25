@@ -11,6 +11,8 @@
 
 #include "status.h"
 
+_cache_t routes_cache;
+
 void respond(
     context *ctx, const char *text, size_t size, 
     STATUS status, MIME_TYPE mime
@@ -114,4 +116,18 @@ void respond_not_implemented(int socket) {
     memcpy(req->iov[0].iov_base, str, len);
 
     add_write_request(req);
+}
+
+int cache_find_index(char *route) {
+    to_lower(route);
+
+    for (int i = 0; i < CACHE_SIZE; i++) {
+        if (!routes_cache.cache[i].route) {
+            return -1;
+        } else if (strcmp(routes_cache.cache[i].route, route) == 0) {
+            return i;
+        }
+    }
+
+    return -1;
 }

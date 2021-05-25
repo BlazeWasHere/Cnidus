@@ -7,6 +7,8 @@
  * Includes headers that should be exposed to the user
  */
 
+#pragma once
+
 #include "file.h"
 #include "mime.h"
 #include "response.h"
