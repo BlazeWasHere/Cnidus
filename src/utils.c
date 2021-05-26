@@ -25,18 +25,6 @@ void sigint_handler(int signal) {
     exit(0);
 }
 
-int get_line(const char *src, char *dest, int dest_sz) {
-    for (int i = 0; i < dest_sz; i++) {
-        dest[i] = src[i];
-        if (src[i] == '\r' && src[i + 1] == '\n') {
-            dest[i] = '\0';
-            return 0;
-        }
-    }
-
-    return 1;
-}
-
 http_metadata *parse_http_line(char *http_line) {
     http_metadata *data = malloc(sizeof(http_metadata));
     size_t method_len, path_len;
@@ -59,7 +47,7 @@ http_metadata *parse_http_line(char *http_line) {
     sprintf(data->version, "HTTP/1.%d", version);
 
     // pointer arithmetic; `data->ret` returns the position where headers end
-    data->data = method + data->ret;
+    data->data = (char *)method + data->ret;
 
     return data;
 }

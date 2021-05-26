@@ -28,10 +28,6 @@ void error(const char *str, int ret, int code);
  */
 void sigint_handler(int signal);
 /**
- * Helper to get the first line from a HTTP request
- */
-int get_line(const char *src, char *dest, int dest_sz);
-/**
  * Helper to parse line from `get_line` to char array.
  * "GET / HTTP/1.0" -> ["GET", "/", "HTTP/1.0"]
  */
