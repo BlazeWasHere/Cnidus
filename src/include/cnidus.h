@@ -15,3 +15,5 @@
 #include "server.h"
 #include "status.h"
 #include "utils.h"
+
+const char *CNIDUS_VERSION = "0.2.0";

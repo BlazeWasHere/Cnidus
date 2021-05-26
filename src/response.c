@@ -11,6 +11,8 @@
 
 #include "status.h"
 
+#define SERVER_STR "Server: Cnidus/0.2.0\r\n"
+
 _cache_t routes_cache;
 
 void respond(
@@ -36,6 +38,7 @@ void respond(
     strcat(content_type, "content-type: ");
     strcat(content_type, mime_string(mime));
     strcat(str, content_type);
+    strcat(str, SERVER_STR); 
 
     // add trailing "\r\n" to signal end of headers
     strcat(str, "\r\n");
