@@ -37,9 +37,12 @@ typedef struct {
     cache_s cache[CACHE_SIZE];
 } _cache_t;
 
-/* function to return a response to the socket */
+/* function to return a response to the socket, 
+ * cache = 0 | 1, enable or disable the response + headers for the route
+ */
 void respond(
-    context *ctx, const char *text, size_t size, STATUS status, MIME_TYPE mime
+    context *ctx, const char *text, size_t size, 
+    STATUS status, MIME_TYPE mime, int cache
 );
 /* function to return a prepared response to the socket */
 void respond_with_response(response *res);

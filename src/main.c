@@ -12,9 +12,12 @@
 #define PORT 1337
 #define ENTRIES 256
 
+#define true 1
+#define false 0
+
 static void home(context *ctx) {
     const char *res = "welcome to cnidus!";
-    respond(ctx, res, sizeof(res), OK, txt);
+    respond(ctx, res, sizeof(res), OK, txt, true);
 }
 
 static void license(context *ctx) {
@@ -31,14 +34,14 @@ static void license(context *ctx) {
         // you should handle possible errors from the return of read_file
         read_file(file_name, buffer, ret);
         
-        respond(ctx, buffer, ret, OK, txt);
+        respond(ctx, buffer, ret, OK, txt, true);
         free(buffer);
     }
 }
 
 static void post(context *ctx) {
     printf("received: %s\n", ctx->data);
-    respond(ctx, "hello", 6, OK, txt);
+    respond(ctx, "hello", 6, OK, txt, false);
 }
 
 int main() {

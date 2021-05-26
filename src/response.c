@@ -15,7 +15,7 @@ _cache_t routes_cache;
 
 void respond(
     context *ctx, const char *text, size_t size, 
-    STATUS status, MIME_TYPE mime
+    STATUS status, MIME_TYPE mime, int cache
 ) {
     char *str = handle_status(status);
     // TODO: terrible to be hardcoding here.
@@ -50,7 +50,10 @@ void respond(
     memcpy(req->iov[0].iov_base, str, str_len);
 
     add_write_request(req);
-    _cache(ctx->__key, str, str_len);
+    
+    if (cache == 1) {
+        _cache(ctx->__key, str, str_len);
+    }
 
     free(content_type);
     free(str);
