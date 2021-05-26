@@ -165,8 +165,17 @@ int add_route(http_method method, const char *path, callback_t value) {
     concat((char*)method_str, (char*)path, key);
 
     dict_add(routes, key, value);
-
     free(key);
+
+    // add HEAD support on GET routes
+    if (method == GET) {
+        key = calloc(1, strlen(path) + sizeof("head") + 1);
+        concat((char*)"head", (char*)path, key);
+        
+        dict_add(routes, key, value);
+        free(key);
+    } 
+
 
     return 0;
 }

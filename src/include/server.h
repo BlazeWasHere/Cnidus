@@ -30,6 +30,7 @@ struct request {
 typedef enum {
     GET,
     POST,
+    HEAD,
 } http_method;
 
 typedef void (*callback_t)(context*);

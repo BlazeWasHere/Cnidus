@@ -52,6 +52,8 @@ int handle_http_method(
                 get(ctx, ret);
             } else if (strcmp(metadata->method, "post") == 0) {
                 post(ctx, ret);
+            } else if (strcmp(metadata->method, "head") == 0) {
+                get(ctx, ret);
             } else {
                 respond_not_implemented(socket);
             }
