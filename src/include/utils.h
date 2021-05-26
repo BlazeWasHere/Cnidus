@@ -5,10 +5,18 @@
 
 #pragma once
 
+#include "picohttpparser.h"
+
 typedef struct {
-    char *method;    /* GET */
-    char *path;      /* /foo */
-    char *version;   /* HTTP/1.0 */
+    char *method;    /* HTTP method, e.g GET */
+    char *path;      /* Path of the request, e.g /foo */
+    char *version;   /* HTTP version, e.g HTTP/1.0 */
+    int ret;         /* returns number of bytes consumed if successful, 
+                      * -2 if request is partial, -1 if failed */
+    int size;        /* size of the request in bytes */
+    struct phr_header headers[30];
+    size_t headers_len; /* Amount of headers in the request, e.g 10 */
+    char *data;      /* request body data, e.g "foo=bar" */
 } http_metadata;
 
 /**

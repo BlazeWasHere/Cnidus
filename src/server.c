@@ -144,16 +144,16 @@ void handle_client_request(struct request *req, struct sockaddr_in *client) {
     char *http_request = calloc(1, READ_BUFFER);
 
     /* Get the first line, which will be the request, we should error out */
-    if (get_line(req->iov[0].iov_base, http_request, READ_BUFFER)) {
+/*    if (get_line(req->iov[0].iov_base, http_request, READ_BUFFER)) {
         printf("Malformed request\nGot: %s\n", http_request);
         
         // drop the connection
         req->event_type = WRITE;
         free(http_request);
         return;
-    }
+    } */
 
-    handle_http_method(http_request, req->client_socket, client, &routes);
+    handle_http_method(req->iov[0].iov_base, req->client_socket, client, &routes);
     free(http_request);
 }
 

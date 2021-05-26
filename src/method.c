@@ -42,6 +42,7 @@ int handle_http_method(
             context *ctx = malloc(sizeof(context));
 
             ctx->method = metadata->method;
+            ctx->data = metadata->data;
             ctx->path = metadata->path;
             ctx->client = client;
             ctx->socket = socket;

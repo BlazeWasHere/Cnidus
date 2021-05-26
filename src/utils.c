@@ -38,36 +38,30 @@ int get_line(const char *src, char *dest, int dest_sz) {
 }
 
 http_metadata *parse_http_line(char *http_line) {
-    http_metadata *metadata = malloc(sizeof(http_metadata));
-    char *token, *str;
-    uint32_t count = 0;
+    http_metadata *data = malloc(sizeof(http_metadata));
+    size_t method_len, path_len;
+    const char *method, *path;
+    int version;
 
-    str = strdup(http_line);
+    data->headers_len = sizeof(data->headers) / sizeof(data->headers[0]);
+    data->ret = phr_parse_request(
+        http_line, strlen(http_line), &method, &method_len, &path,
+        &path_len, &version, data->headers, &data->headers_len, 0
+    );
+    
+    data->version = calloc(1, sizeof("HTTP/1.x") + 1);
+    data->method = calloc(1, method_len + 1);
+    data->path = calloc(1, path_len + 1);
 
-    while ((token = strsep(&str, " "))) {
-        count++;
-        
-        switch (count) {
-            case 1:
-                metadata->method = token;
-                break;
+    // now sprintf() to "correct" the variables
+    sprintf(data->method, "%.*s", (int)method_len, method);
+    sprintf(data->path, "%.*s", (int)path_len, path);
+    sprintf(data->version, "HTTP/1.%d", version);
 
-            case 2:
-                metadata->path = token;
-                break;
+    // pointer arithmetic; `data->ret` returns the position where headers end
+    data->data = method + data->ret;
 
-            case 3:
-                metadata->version = token;
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    free(str);
-
-    return metadata;
+    return data;
 }
 
 void to_lower(char *str) {
