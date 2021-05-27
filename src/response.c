@@ -42,7 +42,11 @@ void respond(
 
     // add trailing "\r\n" to signal end of headers
     strcat(str, "\r\n");
-    strcat(str, text);
+
+    // remove body on HEAD
+    if (strcmp(ctx->method, "head") != 0) {
+        strcat(str, text);
+    }
 
     size_t str_len = strlen(str);
 
