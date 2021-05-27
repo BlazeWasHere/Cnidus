@@ -155,6 +155,6 @@ const char *mime_string(MIME_TYPE mime) {
             return "application/x-7z-compressed\r\n";
     }
 
-    // should never come here, but if for some reason it does return empty string
+    // should never come here, but if it does an empty string is returned
     return "\r\n";
 }
