@@ -36,7 +36,7 @@ int main() {
 ```
 
 # Compile
-This probably isn't the most ideal to do.
+This probably isn't the most ideal way to do it.
 
 ```sh
 $ make
@@ -251,7 +251,6 @@ On the TODO list.
 
 # TODO
   - Create documentation.
-  - Support more than GET method.
   - Static file serving.
   - Write some tests.
   - More example usages.
