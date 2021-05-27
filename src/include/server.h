@@ -8,6 +8,13 @@
 #include <netinet/in.h>
 #include <stdint.h>
 
+#include "picohttpparser.h"
+
+struct headers {
+    char *header;   /* header name */
+    char *value;    /* header value */
+};
+
 // context which is returned to callback functions
 typedef struct {
     struct sockaddr_in *client;
@@ -16,6 +23,8 @@ typedef struct {
     char *method;
     char *data;
     char *__key;
+    struct phr_header[30] request_headers;
+    struct headers[30] response_headers;
 } context;
 
 // internal struct for the handling of a client
