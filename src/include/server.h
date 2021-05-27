@@ -23,8 +23,10 @@ typedef struct {
     char *method;
     char *data;
     char *__key;
-    struct phr_header[30] request_headers;
-    struct headers[30] response_headers;
+    struct phr_header request_headers[30];
+    size_t request_headers_len;
+    struct headers response_headers[30];
+    size_t response_headers_count;
 } context;
 
 // internal struct for the handling of a client

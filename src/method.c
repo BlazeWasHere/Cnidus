@@ -41,6 +41,7 @@ int handle_http_method(
         if (ret != NULL) {
             context *ctx = malloc(sizeof(context));
 
+            ctx->response_headers_count = 0;
             ctx->method = metadata->method;
             ctx->data = metadata->data;
             ctx->path = metadata->path;

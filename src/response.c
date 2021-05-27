@@ -9,6 +9,7 @@
 
 #include "response.h"
 
+#include "header.h"
 #include "status.h"
 
 #define SERVER_STR "Server: Cnidus/0.2.0\r\n"
@@ -38,7 +39,23 @@ void respond(
     strcat(content_type, "content-type: ");
     strcat(content_type, mime_string(mime));
     strcat(str, content_type);
-    strcat(str, SERVER_STR); 
+    strcat(str, SERVER_STR);
+
+    if (ctx->response_headers_count > 0) {
+        struct headers *x;
+        char *key;
+
+        // user has requested to add headers
+        for (int i = 0; i < ctx->response_headers_count; i++) {
+            x = &ctx->response_headers[i];
+            key = create_header_string(x->header, x->value);
+
+            str = realloc(str, size + 100 + strlen(key));
+            strcat(str, key);
+            free(key);
+        }
+    }
+
 
     // add trailing "\r\n" to signal end of headers
     strcat(str, "\r\n");
