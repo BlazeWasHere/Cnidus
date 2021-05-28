@@ -82,7 +82,10 @@ int handle_http_method(
 
         add_write_request(req);
     }
-
+    
+    free(metadata->version);
+    free(metadata->method);
+    free(metadata->path);
     free(metadata);
     free(key);
 
