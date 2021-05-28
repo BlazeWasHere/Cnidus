@@ -36,12 +36,12 @@ void headers_to_array(
         char *key = calloc(1, 100);
         sprintf(key, "%.*s", (int)headers[i].name_len, headers[i].name);
         to_lower(key);
-
         array[i][0] = strdup(key);
+
         sprintf(key, "%.*s", (int)headers[i].value_len, headers[i].value);
         to_lower(key);
         array[i][1] = strdup(key);
-        printf("name: %s value: %s\n", array[i][0], array[i][1]);
+        
         free(key);
     }
 }

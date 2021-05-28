@@ -16,11 +16,8 @@
 #define false 0
 
 static void home(context *ctx) {
-    char ***array = create_2d_string_array(30, 2, sizeof(char*));
-    headers_to_array(ctx->request_headers, ctx->request_headers_len, array);
     const char *res = "welcome to cnidus!";
     respond(ctx, res, sizeof(res), OK, txt, false);
-    free_2d_string_array(array, 30, sizeof(char*));
 }
 
 static void license(context *ctx) {
