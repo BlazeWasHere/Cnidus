@@ -16,8 +16,11 @@
 #define false 0
 
 static void home(context *ctx) {
+    char ***array = create_2d_string_array(30, 2, sizeof(char*));
+    headers_to_array(ctx->request_headers, ctx->request_headers_len, array);
     const char *res = "welcome to cnidus!";
-    respond(ctx, res, sizeof(res), OK, txt, true);
+    respond(ctx, res, sizeof(res), OK, txt, false);
+    free_2d_string_array(array, 30, sizeof(char*));
 }
 
 static void license(context *ctx) {
@@ -39,9 +42,24 @@ static void license(context *ctx) {
     }
 }
 
-static void post(context *ctx) {
+static void post(context *ctx) { 
     printf("received: %s\n", ctx->data);
     respond(ctx, "hello", 6, OK, txt, false);
+}
+
+static void headers(context *ctx) {
+    // 30 rows, 2 columns
+    char ***array = create_2d_string_array(30, 2, sizeof(char*));
+    headers_to_array(ctx->request_headers, ctx->request_headers_len, array);
+    /* code to handle the header array */
+    // ... //
+
+    add_header(ctx, "foo", "bar");
+
+    const char *res = "added header, `foo: bar` to the request";
+    respond(ctx, res, sizeof(res), OK, txt, true);
+
+    free_2d_string_array(array, 30, sizeof(char*));
 }
 
 int main() {

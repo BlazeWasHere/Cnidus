@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "picohttpparser.h"
 #include "server.h"
 
 /**
@@ -15,3 +16,26 @@ void add_header(context *ctx, char *header, char *value);
 
 /* Creates a calloc'd header string to be used in the socket response */
 char *create_header_string(char *header, char *value);
+
+/** 
+ * Convert a `phr_header[]` into a 2d string array 
+ * `[[name, value], [name, value], ...]`, which makes it easier for handling
+ **/
+void headers_to_array(
+    struct phr_header headers[], size_t headers_len, char ***array
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

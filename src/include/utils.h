@@ -40,3 +40,20 @@ void to_lower(char *str);
  * Join first and second to result
  */
 void concat(char *first, char *second, char *result);
+/**
+ * return a calloc'd pointer which is equivalent to a 2d string array space,
+ * which has `rows` and `columns`, remember to free this,
+ * with `free_2d_string_array(...);`
+ *
+ * VISUAL:
+ *      [
+ *            COLUMN
+ *          [ "foo", "bar" ],  ROW
+ *          [ "bar", "buzz" ]
+ *      ]
+ */
+char ***create_2d_string_array(size_t rows, size_t columns, size_t elem_size);
+/**
+ * To clear the array created from `create_2d_string_array(...)`
+ */
+void free_2d_string_array(char ***array, size_t rows, size_t elem_size);

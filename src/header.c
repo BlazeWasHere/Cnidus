@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "header.h"
 
@@ -26,4 +27,21 @@ void add_header(context *ctx, char *header, char *value) {
     ctx->response_headers[ctx->response_headers_count].value = value;
 
     ctx->response_headers_count++;
+}
+
+void headers_to_array(
+    struct phr_header headers[], size_t headers_len, char ***array
+) {
+    for (size_t i = 0; i < headers_len; i++) {
+        char *key = calloc(1, 100);
+        sprintf(key, "%.*s", (int)headers[i].name_len, headers[i].name);
+        to_lower(key);
+
+        array[i][0] = strdup(key);
+        sprintf(key, "%.*s", (int)headers[i].value_len, headers[i].value);
+        to_lower(key);
+        array[i][1] = strdup(key);
+        printf("name: %s value: %s\n", array[i][0], array[i][1]);
+        free(key);
+    }
 }

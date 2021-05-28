@@ -64,3 +64,32 @@ void concat(char *first, char *second, char *result) {
     memcpy(result, first, x);
     memcpy(result + x, second, y);
 }
+
+char ***create_2d_string_array(size_t rows, size_t columns, size_t elem_size) {
+    char ***array;
+    array = calloc(rows, sizeof(char*));
+
+    for (size_t i = 0; i < rows; i++) {
+        array[i] = calloc(columns, elem_size);
+
+        for (size_t j = 0; j < sizeof(char); j++) {
+            // +1 = '\0'
+            array[i][j] = calloc(1, sizeof(char));
+        }
+    }
+
+    return array;
+}
+
+void free_2d_string_array(char ***array, size_t rows, size_t elem_size) {
+    for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < sizeof(char); j++) {
+            free(array[i][j]);
+        }
+
+        free(array[i]);
+    }
+
+    free(array);
+}
+
