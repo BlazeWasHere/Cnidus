@@ -23,8 +23,8 @@ char *create_header_string(char *header, char *value) {
 }
 
 void add_header(context *ctx, char *header, char *value) {
-    ctx->response_headers[ctx->response_headers_count].header = header;
-    ctx->response_headers[ctx->response_headers_count].value = value;
+    ctx->response_headers[ctx->response_headers_count].header = strdup(header);
+    ctx->response_headers[ctx->response_headers_count].value = strdup(value);
 
     ctx->response_headers_count++;
 }

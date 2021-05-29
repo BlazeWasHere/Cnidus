@@ -48,15 +48,23 @@ static void headers(context *ctx) {
     // 30 rows, 2 columns
     char ***array = create_2d_string_array(30, 2, sizeof(char*));
     headers_to_array(ctx->request_headers, ctx->request_headers_len, array);
-    /* code to handle the header array */
-    // ... //
+
+    char *buffer = calloc(30 * 2, sizeof(char*));
+    
+    for (size_t i = 0; i < ctx->request_headers_len; i++) {
+        strcat(buffer, array[i][0]);
+        strcat(buffer, ": ");
+        strcat(buffer, array[i][1]);
+        strcat(buffer, "\n");
+    }
 
     add_header(ctx, "foo", "bar");
+    strcat(buffer, "\nadded the header `foo:bar` to the request");
 
-    const char *res = "added header, `foo: bar` to the request";
-    respond(ctx, res, sizeof(res), OK, txt, true);
+    respond(ctx, buffer, strlen(buffer), OK, txt, false);
 
     free_2d_string_array(array, 30, sizeof(char*));
+    free(buffer);
 }
 
 int main() {
@@ -74,6 +82,7 @@ int main() {
     add_route(GET, "/license", license);
     add_route(POST, "/post", post);
     add_route(GET, "/post", post);
+    add_route(GET, "/headers", headers);
 
     printf("Listening at http://localhost:%d\n", PORT);
 
