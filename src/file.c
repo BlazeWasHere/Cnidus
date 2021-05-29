@@ -7,7 +7,7 @@
 
 #include "file.h"
 
-size_t file_exists(char *path) {
+size_t file_exists(const char *path) {
     struct stat _stat;
 
     if (stat(path, &_stat) == -1 || !S_ISREG(_stat.st_mode)) {
@@ -17,7 +17,7 @@ size_t file_exists(char *path) {
     return _stat.st_size;
 }
 
-int read_file(char *file_name, char *buffer, size_t size) {
+int read_file(const char *file_name, char *buffer, size_t size) {
     FILE *file;
     file = fopen(file_name, "r");
 

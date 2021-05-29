@@ -57,7 +57,7 @@ void to_lower(char *str) {
         *str = (char)tolower(*str);
 }
 
-void concat(char *first, char *second, char *result) {
+void concat(const char *first, const char *second, char *result) {
     size_t x = strlen(first);
     size_t y = strlen(second);
 
@@ -81,7 +81,7 @@ char ***create_2d_string_array(size_t rows, size_t columns, size_t elem_size) {
     return array;
 }
 
-void free_2d_string_array(char ***array, size_t rows, size_t elem_size) {
+void free_2d_string_array(char ***array, size_t rows) {
     for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < sizeof(char); j++) {
             free(array[i][j]);

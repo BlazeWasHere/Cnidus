@@ -22,7 +22,7 @@ char *create_header_string(char *header, char *value) {
     return key;
 }
 
-void add_header(context *ctx, char *header, char *value) {
+void add_header(context *ctx, const char *header, const char *value) {
     ctx->response_headers[ctx->response_headers_count].header = strdup(header);
     ctx->response_headers[ctx->response_headers_count].value = strdup(value);
 

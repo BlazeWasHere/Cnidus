@@ -11,9 +11,9 @@
  * Helper func to find if a file exists, returns st_size on success, 0 = false
  * On success, the `path_stat` param pointer is filled.
  */
-size_t file_exists(char *path);
+size_t file_exists(const char *path);
 /**
  * Helper func to open and read the `file_name` and write to an alloc'd buffer
  * Returns 0 on success, -1 on failure to open file and -2 on short read.
  */
-int read_file(char *file_name, char *buffer, size_t size);
+int read_file(const char *file_name, char *buffer, size_t size);

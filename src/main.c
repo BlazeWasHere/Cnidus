@@ -21,7 +21,7 @@ static void home(context *ctx) {
 }
 
 static void license(context *ctx) {
-    char *file_name = "LICENSE";
+    const char *file_name = "LICENSE";
     int ret = file_exists(file_name);
 
     if (!ret) {
@@ -63,7 +63,7 @@ static void headers(context *ctx) {
 
     respond(ctx, buffer, strlen(buffer), OK, txt, false);
 
-    free_2d_string_array(array, 30, sizeof(char*));
+    free_2d_string_array(array, 30);
     free(buffer);
 }
 

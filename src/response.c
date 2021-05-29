@@ -47,7 +47,7 @@ void respond(
         char *key;
 
         // user has requested to add headers
-        for (int i = 0; i < ctx->response_headers_count; i++) {
+        for (size_t i = 0; i < ctx->response_headers_count; i++) {
             x = &ctx->response_headers[i];
             key = create_header_string(x->header, x->value);
 
