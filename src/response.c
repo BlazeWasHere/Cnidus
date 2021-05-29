@@ -22,7 +22,8 @@ void respond(
 ) {
     char *str = handle_status(status);
     // TODO: terrible to be hardcoding here.
-    str = realloc(str, size + 100);
+    size += 100;
+    str = realloc(str, size);
 
     if (str == NULL) {
         fprintf(stderr, "Unsupported HTTP Status code: %d\n", status);
@@ -50,8 +51,11 @@ void respond(
             x = &ctx->response_headers[i];
             key = create_header_string(x->header, x->value);
 
-            str = realloc(str, size + 100 + strlen(key));
+            str = realloc(str, (size = size + strlen(key) + 1));
             strcat(str, key);
+
+            free(x->header);
+            free(x->value);
             free(key);
         }
     }
@@ -62,13 +66,14 @@ void respond(
 
     // remove body on HEAD
     if (strcmp(ctx->method, "head") != 0) {
+        str = realloc(str, strlen(text) + size + 1);
         strcat(str, text);
     }
 
     size_t str_len = strlen(str);
 
     req->iovec_count = 1;
-    req->iov[0].iov_base = malloc(str_len);
+    req->iov[0].iov_base = calloc(1, str_len);
     req->iov[0].iov_len = str_len;
     req->client_socket = ctx->socket;
     memcpy(req->iov[0].iov_base, str, str_len);
