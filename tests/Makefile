@@ -7,13 +7,6 @@ OBJ := bin
 SOURCES := $(wildcard *.c)
 OBJECTS := $(patsubst %.c, $(OBJ)/%, $(SOURCES))
 
-ifeq ($(PREFIX),)
-    PREFIX := /usr/local
-endif
-
-INCLUDEDIR ?= $(PREFIX)/include
-LIBDIR ?= $(PREFIX)/lib
-
 test: $(OBJECTS)
 	chmod +x tests.sh
 	./tests.sh

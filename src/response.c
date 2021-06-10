@@ -88,20 +88,6 @@ void respond(
     free(str);
 }
 
-void respond_with_response(response *res) {
-    char *str = handle_status(res->status);
-
-    if (str == NULL) {
-        fprintf(stderr, "Unsupported HTTP Status code: %d\n", res->status);
-        return;
-    }
-
-    // we assume user did everything correct, not the best assumption.
-    add_write_request(res->req);
-
-    free(res->headers);
-}
-
 void respond_not_found(int socket) {
     // all hardcoded stuff here.
 

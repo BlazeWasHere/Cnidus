@@ -7,13 +7,6 @@ OBJ := object
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
 
-ifeq ($(PREFIX),)
-    PREFIX := /usr/local
-endif
-
-INCLUDEDIR ?= $(PREFIX)/include
-LIBDIR ?= $(PREFIX)/lib
-
 cnidus: $(OBJECTS)
 	$(CC) $^ -o $@ ${CFLAGS}
 

@@ -44,8 +44,6 @@ void respond(
     context *ctx, const char *text, size_t size, 
     STATUS status, MIME_TYPE mime, int cache
 );
-/* function to return a prepared response to the socket */
-void respond_with_response(response *res);
 /* respond with a 404 NOT FOUND to the socket */
 void respond_not_found(int socket);
 void _cache(char *route, char *text, size_t len);
