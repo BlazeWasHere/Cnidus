@@ -29,3 +29,7 @@ const char *http_method_to_string(http_method method);
  * handle the POST http method.
  */
 void post(context *ctx, callback_t callback);
+/**
+ * handle the PUT http method.
+ */
+void put (context *ctx, callback_t callback);

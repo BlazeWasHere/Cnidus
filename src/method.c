@@ -60,6 +60,8 @@ int handle_http_method(
                 post(ctx, ret);
             } else if (strcmp(metadata->method, "head") == 0) {
                 get(ctx, ret);
+            } else if (strcmp(metadata->method, "put") == 0) {
+                put(ctx, ret);
             } else {
                 respond_not_implemented(socket);
             }
@@ -98,6 +100,10 @@ const char *http_method_to_string(http_method method) {
             return "get";
         case POST:
             return "post";
+        case HEAD:
+            return "head";
+        case PUT:
+            return "put";
         default:
             return NULL;
     }
@@ -108,5 +114,9 @@ void get(context *ctx, callback_t callback) {
 }
 
 void post(context *ctx, callback_t callback) {
+    callback(ctx);
+}
+
+void put(context *ctx, callback_t callback) {
     callback(ctx);
 }

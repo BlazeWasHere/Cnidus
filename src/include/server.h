@@ -42,6 +42,7 @@ typedef enum {
     GET,
     POST,
     HEAD,
+    PUT,
 } http_method;
 
 typedef void (*callback_t)(context*);
