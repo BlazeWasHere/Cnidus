@@ -7,6 +7,7 @@
 
 typedef enum {
     OK          = 200,
+    NO_CONTENT  = 204,
     NOT_FOUND   = 404,
     NOT_IMPLEMENTED = 501,
 } STATUS;

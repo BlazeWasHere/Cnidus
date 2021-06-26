@@ -20,6 +20,9 @@ char *handle_status(STATUS status) {
         case OK:
             strcat(str, "200 OK");
             break;
+        case NO_CONTENT:
+            strcat(str, "204 No Content");
+            break;
         case NOT_FOUND:
             strcat(str, "404 Not Found");
             break;
