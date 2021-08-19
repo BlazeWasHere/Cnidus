@@ -10,11 +10,11 @@
 #pragma once
 
 #include "file.h"
+#include "header.h"
 #include "mime.h"
 #include "response.h"
 #include "server.h"
 #include "status.h"
 #include "utils.h"
-#include "header.h"
 
-const char *CNIDUS_VERSION = "0.2.0";
+const char *CNIDUS_VERSION = "0.2.1";

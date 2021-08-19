@@ -3,23 +3,21 @@
 //    (See accompanying file LICENSE or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "response.h"
 
 #include "header.h"
 #include "status.h"
 
-#define SERVER_STR "Server: Cnidus/0.2.0\r\n"
+#define SERVER_STR "Server: Cnidus/0.2.1\r\n"
 
 _cache_t routes_cache;
 
-void respond(
-    context *ctx, const char *text, size_t size, 
-    STATUS status, MIME_TYPE mime, int cache
-) {
+void respond(context_t *ctx, const char *text, size_t size, enum status status,
+             enum mime mime, bool cache) {
     char *str = handle_status(status);
     // TODO: terrible to be hardcoding here.
     size += 100;
@@ -30,15 +28,18 @@ void respond(
         return;
     }
 
-    struct request *req = malloc(sizeof(*req) + sizeof(struct iovec));
+    struct request *req =
+        calloc(1, sizeof(struct request) + sizeof(struct iovec));
     size_t text_len = strlen(text);
 
     sprintf(str + strlen(str), "content-length: %ld\r\n", text_len);
-    
-    char *content_type = calloc(1, 100);
-    
+
+    const char *mime_str = mime_string(mime);
+    char *content_type =
+        calloc(1, strlen(mime_str) + strlen("content_type: ") + 1);
+
     strcat(content_type, "content-type: ");
-    strcat(content_type, mime_string(mime));
+    strcat(content_type, mime_str);
     strcat(str, content_type);
     strcat(str, SERVER_STR);
 
@@ -60,11 +61,10 @@ void respond(
         }
     }
 
-
     // add trailing "\r\n" to signal end of headers
     strcat(str, "\r\n");
 
-    // remove body on HEAD
+    // add body if method is not HEAD
     if (strcmp(ctx->method, "head") != 0) {
         str = realloc(str, strlen(text) + size + 1);
         strcat(str, text);
@@ -79,40 +79,37 @@ void respond(
     memcpy(req->iov[0].iov_base, str, str_len);
 
     add_write_request(req);
-    
-    if (cache == 1) {
+
+    if (cache == true)
         _cache(ctx->__key, str, str_len);
-    }
 
     free(content_type);
     free(str);
 }
 
+// TODO(blaze): create as a util func
 void respond_not_found(int socket) {
     // all hardcoded stuff here.
 
-    struct request *req = malloc(sizeof(*req) + sizeof(struct iovec));
+    struct request *req =
+        calloc(1, sizeof(struct request) + sizeof(struct iovec));
     const char *str = "HTTP/1.0 404 Not Found\r\n"
-                "\r\n"
-                "Not Found";
-    
+                      "\r\n"
+                      "Not Found";
+
     size_t len = strlen(str);
 
     req->iovec_count = 1;
     req->client_socket = socket;
-    req->iov[0].iov_base = malloc(len);
+    req->iov[0].iov_base = calloc(1, len);
     req->iov[0].iov_len = len;
     memcpy(req->iov[0].iov_base, str, len);
 
     add_write_request(req);
-} 
+}
 
 void _cache(char *route, char *text, size_t len) {
-    cache_s cache = {
-        .route = strdup(route),
-        .text = strdup(text),
-        .len = len
-    };
+    cache_s cache = {.route = strdup(route), .text = strdup(text), .len = len};
 
     routes_cache.cache[routes_cache.count++] = cache;
 }
@@ -120,16 +117,17 @@ void _cache(char *route, char *text, size_t len) {
 void respond_not_implemented(int socket) {
     // all hardcoded stuff here.
 
-    struct request *req = malloc(sizeof(*req) + sizeof(struct iovec));
+    struct request *req =
+        calloc(1, sizeof(struct request) + sizeof(struct iovec));
     const char *str = "HTTP/1.0 501 Not Implemented\r\n"
-                "\r\n"
-                "Not Implemented";
-    
+                      "\r\n"
+                      "Not Implemented";
+
     size_t len = strlen(str);
 
     req->iovec_count = 1;
     req->client_socket = socket;
-    req->iov[0].iov_base = malloc(len);
+    req->iov[0].iov_base = calloc(1, len);
     req->iov[0].iov_len = len;
     memcpy(req->iov[0].iov_base, str, len);
 
@@ -140,11 +138,11 @@ int cache_find_index(char *route) {
     to_lower(route);
 
     for (int i = 0; i < CACHE_SIZE; i++) {
-        if (!routes_cache.cache[i].route) {
+        if (!routes_cache.cache[i].route)
             return -1;
-        } else if (strcmp(routes_cache.cache[i].route, route) == 0) {
+        // TODO(blaze): use strncmp()
+        else if (strcmp(routes_cache.cache[i].route, route) == 0)
             return i;
-        }
     }
 
     return -1;

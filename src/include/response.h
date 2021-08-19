@@ -5,12 +5,13 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <string.h>
 
+#include "mime.h"
 #include "server.h"
 #include "status.h"
 #include "utils.h"
-#include "mime.h"
 
 #define CACHE_SIZE 64
 
@@ -21,14 +22,14 @@ typedef struct {
     size_t len;
 } cache_s;
 
-// struct representing the prepared response 
+// struct representing the prepared response
 typedef struct {
     int socket;
     char *headers;
     const char *text;
     struct request *req;
-    STATUS status;
-    MIME_TYPE mine;
+    enum status status;
+    enum mime mine;
 } response;
 
 // internal use; the routes cache struct
@@ -37,13 +38,11 @@ typedef struct {
     cache_s cache[CACHE_SIZE];
 } _cache_t;
 
-/* function to return a response to the socket, 
+/* function to return a response to the socket,
  * cache = 0 | 1, enable or disable the response + headers for the route
  */
-void respond(
-    context *ctx, const char *text, size_t size, 
-    STATUS status, MIME_TYPE mime, int cache
-);
+void respond(context_t *ctx, const char *text, size_t size, enum status status,
+             enum mime, bool cache);
 /* respond with a 404 NOT FOUND to the socket */
 void respond_not_found(int socket);
 void _cache(char *route, char *text, size_t len);

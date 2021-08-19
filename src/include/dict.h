@@ -11,11 +11,11 @@
 
 #include "server.h"
 
-typedef void (*callback_t)(context*);
+typedef void (*callback_t)(context_t *);
 
 typedef struct dict_entry_s {
-    char *key;          /* key, which should be our routes + method */
-    callback_t value;   /* our callback fn */
+    char *key;        /* key, which should be our routes + method */
+    callback_t value; /* our callback fn */
 } dict_entry_s;
 
 typedef struct dict_s {

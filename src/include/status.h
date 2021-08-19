@@ -5,14 +5,14 @@
 
 #pragma once
 
-typedef enum {
-    OK          = 200,
-    NO_CONTENT  = 204,
-    NOT_FOUND   = 404,
+enum status {
+    OK = 200,
+    NO_CONTENT = 204,
+    NOT_FOUND = 404,
     NOT_IMPLEMENTED = 501,
-} STATUS;
+};
 
 /**
  * Return a HTTP response string based on status code, may return NULL
  */
-char *handle_status(STATUS stats);
+char *handle_status(enum status status);

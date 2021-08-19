@@ -11,8 +11,8 @@
 #include "picohttpparser.h"
 
 struct headers {
-    char *header;   /* header name */
-    char *value;    /* header value */
+    char *header; /* header name */
+    char *value;  /* header value */
 };
 
 // context which is returned to callback functions
@@ -23,11 +23,11 @@ typedef struct {
     char *method;
     char *data;
     char *__key;
-    struct phr_header request_headers[30];
+    struct phr_header *request_headers;
     size_t request_headers_len;
-    struct headers response_headers[30];
+    struct headers *response_headers;
     size_t response_headers_count;
-} context;
+} context_t;
 
 // internal struct for the handling of a client
 struct request {
@@ -43,9 +43,15 @@ typedef enum {
     POST,
     HEAD,
     PUT,
-} http_method;
+} http_method_t;
 
-typedef void (*callback_t)(context*);
+enum {
+    ACCEPT,
+    READ,
+    WRITE,
+};
+
+typedef void (*callback_t)(context_t *);
 
 /* init, MUST BE CALLED */
 int setup_context(uint32_t entries);
@@ -55,19 +61,18 @@ int setup_socket(int port);
 void cleanup();
 /* runs forever, accepting and handling new connections */
 void event_loop(int socket);
-void add_accept_request(
-    int socket, struct sockaddr_in *client_addr, socklen_t *client_0ddr_len
-);
+void add_accept_request(int socket, struct sockaddr_in *client_addr,
+                        socklen_t *client_0ddr_len);
 void add_read_request(int client_socket);
 void handle_client_request(struct request *req, struct sockaddr_in *client);
 void add_write_request(struct request *req);
 /**
  * Add a route to the internal router.
- * 
+ *
  * ```c
  *      void handle_foo(struct context ctx) { ... };
  *      ...
  *      add_route(GET, "/foo", handle_foo);
  * ```
  */
-int add_route(http_method method, const char *path, callback_t value);
+int add_route(http_method_t method, const char *path, callback_t value);

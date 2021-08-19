@@ -7,29 +7,28 @@
 
 #include <netinet/in.h>
 
-#include "server.h"
 #include "dict.h"
+#include "server.h"
 
 /**
- * handle the http method from 1st line of a http request, 
+ * handle the http method from 1st line of a http request,
  * returns -1 on error, 0 on success
  */
-int handle_http_method(
-    char *path, int socket, struct sockaddr_in *client, dict_t *routes
-);
+int handle_http_method(char *path, int socket, struct sockaddr_in *client,
+                       dict_t *routes);
 /**
  * handle the GET http method.
  */
-void get(context *ctx, callback_t callback);
+void get(context_t *ctx, callback_t callback);
 /**
  * Converts the enum `http_method` to a human readable string
  */
-const char *http_method_to_string(http_method method);
+const char *http_method_to_string(http_method_t method);
 /**
  * handle the POST http method.
  */
-void post(context *ctx, callback_t callback);
+void post(context_t *ctx, callback_t callback);
 /**
  * handle the PUT http method.
  */
-void put (context *ctx, callback_t callback);
+void put(context_t *ctx, callback_t callback);

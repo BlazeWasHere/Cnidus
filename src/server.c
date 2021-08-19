@@ -4,20 +4,20 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <liburing.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h> // close()
-#include <stdio.h>
 
 #include "server.h"
 
-#include "method.h"
-#include "utils.h"
 #include "dict.h"
 #include "jsmn.h"
+#include "method.h"
+#include "utils.h"
 
-#define READ_BUFFER     1024
-#define BACKLOG         4096
+#define READ_BUFFER 1024
+#define BACKLOG 4096
 
 // global ring
 struct io_uring ring;
@@ -26,12 +26,6 @@ struct io_uring ring;
 dict_t routes;
 
 int isSetup = 0;
-
-enum {
-    ACCEPT,
-    READ,
-    WRITE,
-};
 
 int setup_context(uint32_t entries) {
     isSetup = 1;
@@ -80,33 +74,33 @@ void event_loop(int srv_socket) {
         int ret = io_uring_wait_cqe(&ring, &cqe);
         error("io_uring_wait_sqe", ret, -1);
 
-        struct request *req = (struct request *)cqe->user_data;
+        struct request *req = io_uring_cqe_get_data(cqe);
 
         switch (req->event_type) {
-            case ACCEPT:
-                add_accept_request(srv_socket, &client_addr, &client_addr_len);
-                add_read_request(cqe->res);
+        case ACCEPT:
+            add_accept_request(srv_socket, &client_addr, &client_addr_len);
+            add_read_request(cqe->res);
+            break;
+
+        case READ:
+            if (!cqe->res)
+                // empty res from the client, maybe they write later so
+                // break
                 break;
 
-            case READ:
-                if (!cqe->res) {
-                    // empty res from the client, maybe they write later so break
-                    break;
-                }
+            handle_client_request(req, &client_addr);
+            break;
 
-                handle_client_request(req, &client_addr);
-                break;
+        case WRITE:
+            for (int i = 0; i < req->iovec_count; ++i)
+                free(req->iov[i].iov_base);
 
-            case WRITE:                
-                for (int i = 0; i < req->iovec_count; ++i) {
-                    free(req->iov[i].iov_base);
-                }
+            // TODO(blaze): io_uring_prep_close(...)?
+            close(req->client_socket);
+            break;
 
-                close(req->client_socket);
-                break;
-
-            default:
-                break;
+        default:
+            break;
         }
 
         io_uring_cqe_seen(&ring, cqe);
@@ -114,11 +108,13 @@ void event_loop(int srv_socket) {
     }
 }
 
-void add_accept_request(int socket, struct sockaddr_in *client_addr, socklen_t *client_addr_len) {
+void add_accept_request(int socket, struct sockaddr_in *client_addr,
+                        socklen_t *client_addr_len) {
     struct io_uring_sqe *sqe = io_uring_get_sqe(&ring);
-    io_uring_prep_accept(sqe, socket, (struct sockaddr *)client_addr, client_addr_len, 0);
+    io_uring_prep_accept(sqe, socket, (struct sockaddr *)client_addr,
+                         client_addr_len, 0);
 
-    struct request *req = malloc(sizeof(*req));
+    struct request *req = calloc(1, sizeof(struct request));
     req->event_type = ACCEPT;
 
     io_uring_sqe_set_data(sqe, req);
@@ -126,7 +122,8 @@ void add_accept_request(int socket, struct sockaddr_in *client_addr, socklen_t *
 }
 
 void add_read_request(int client_socket) {
-    struct request *req = malloc(sizeof(*req) + sizeof(struct iovec));
+    struct request *req =
+        calloc(1, sizeof(struct request) + sizeof(struct iovec));
     struct io_uring_sqe *sqe = io_uring_get_sqe(&ring);
 
     req->iovec_count = 1;
@@ -141,7 +138,8 @@ void add_read_request(int client_socket) {
 }
 
 void handle_client_request(struct request *req, struct sockaddr_in *client) {
-    handle_http_method(req->iov[0].iov_base, req->client_socket, client, &routes);
+    handle_http_method(req->iov[0].iov_base, req->client_socket, client,
+                       &routes);
 }
 
 void add_write_request(struct request *req) {
@@ -149,12 +147,13 @@ void add_write_request(struct request *req) {
 
     req->event_type = WRITE;
 
-    io_uring_prep_writev(sqe, req->client_socket, req->iov, req->iovec_count, 0);
+    io_uring_prep_writev(sqe, req->client_socket, req->iov, req->iovec_count,
+                         0);
     io_uring_sqe_set_data(sqe, req);
     io_uring_submit(&ring);
 }
 
-int add_route(http_method method, const char *path, callback_t value) {
+int add_route(http_method_t method, const char *path, callback_t value) {
     if (isSetup == 0) {
         fprintf(stderr, "setup_context() has not been called.\n");
         return -1;
@@ -162,7 +161,7 @@ int add_route(http_method method, const char *path, callback_t value) {
 
     const char *method_str = http_method_to_string(method);
     char *key = calloc(1, strlen(path) + strlen(method_str) + 1);
-    concat((char*)method_str, (char*)path, key);
+    concat((char *)method_str, (char *)path, key);
 
     dict_add(routes, key, value);
     free(key);
@@ -170,12 +169,11 @@ int add_route(http_method method, const char *path, callback_t value) {
     // add HEAD support on GET routes
     if (method == GET) {
         key = calloc(1, strlen(path) + sizeof("head") + 1);
-        concat((char*)"head", (char*)path, key);
-        
+        concat((char *)"head", (char *)path, key);
+
         dict_add(routes, key, value);
         free(key);
-    } 
-
+    }
 
     return 0;
 }

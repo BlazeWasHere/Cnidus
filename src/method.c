@@ -3,22 +3,21 @@
 //    (See accompanying file LICENSE or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include <sys/stat.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
 
 #include "method.h"
 
+#include "dict.h"
 #include "response.h"
 #include "server.h"
 #include "utils.h"
-#include "dict.h"
 
 extern _cache_t routes_cache;
 
-int handle_http_method(
-    char *path, int socket, struct sockaddr_in *client,  dict_t *routes
-) {
+int handle_http_method(char *path, int socket, struct sockaddr_in *client,
+                       dict_t *routes) {
     http_metadata *metadata = parse_http_line(path);
 
     if (!metadata->method || !metadata->path || !metadata->version) {
@@ -26,7 +25,8 @@ int handle_http_method(
         return -1;
     }
 
-    char *key = calloc(1, strlen(metadata->path) + strlen(metadata->method) + 1);
+    char *key =
+        calloc(1, strlen(metadata->path) + strlen(metadata->method) + 1);
     to_lower(metadata->method);
 
     concat(metadata->method, metadata->path, key);
@@ -39,12 +39,10 @@ int handle_http_method(
         callback_t ret = dict_find(*routes, key);
 
         if (ret != NULL) {
-            context *ctx = malloc(sizeof(context));
-            
-            memcpy(
-                ctx->request_headers, metadata->headers, 
-                sizeof(metadata->headers)
-            );
+            context_t *ctx = calloc(1, sizeof(context_t));
+
+            memcpy(ctx->request_headers, metadata->headers,
+                   sizeof(metadata->headers));
             ctx->request_headers_len = metadata->headers_len;
             ctx->response_headers_count = 0;
             ctx->method = metadata->method;
@@ -54,17 +52,16 @@ int handle_http_method(
             ctx->socket = socket;
             ctx->__key = key;
 
-            if (strcmp(metadata->method, "get") == 0) {
+            if (strcmp(metadata->method, "get") == 0)
                 get(ctx, ret);
-            } else if (strcmp(metadata->method, "post") == 0) {
+            else if (strcmp(metadata->method, "post") == 0)
                 post(ctx, ret);
-            } else if (strcmp(metadata->method, "head") == 0) {
+            else if (strcmp(metadata->method, "head") == 0)
                 get(ctx, ret);
-            } else if (strcmp(metadata->method, "put") == 0) {
+            else if (strcmp(metadata->method, "put") == 0)
                 put(ctx, ret);
-            } else {
+            else
                 respond_not_implemented(socket);
-            }
 
             free(ctx);
         } else {
@@ -84,7 +81,7 @@ int handle_http_method(
 
         add_write_request(req);
     }
-    
+
     free(metadata->version);
     free(metadata->method);
     free(metadata->path);
@@ -94,29 +91,23 @@ int handle_http_method(
     return 0;
 }
 
-const char *http_method_to_string(http_method method) {
+const char *http_method_to_string(http_method_t method) {
     switch (method) {
-        case GET:
-            return "get";
-        case POST:
-            return "post";
-        case HEAD:
-            return "head";
-        case PUT:
-            return "put";
-        default:
-            return NULL;
+    case GET:
+        return "get";
+    case POST:
+        return "post";
+    case HEAD:
+        return "head";
+    case PUT:
+        return "put";
+    default:
+        return NULL;
     }
 }
 
-void get(context *ctx, callback_t callback) {
-    callback(ctx);
-}
+void get(context_t *ctx, callback_t callback) { callback(ctx); }
 
-void post(context *ctx, callback_t callback) {
-    callback(ctx);
-}
+void post(context_t *ctx, callback_t callback) { callback(ctx); }
 
-void put(context *ctx, callback_t callback) {
-    callback(ctx);
-}
+void put(context_t *ctx, callback_t callback) { callback(ctx); }

@@ -10,22 +10,19 @@
 size_t file_exists(const char *path) {
     struct stat _stat;
 
-    if (stat(path, &_stat) == -1 || !S_ISREG(_stat.st_mode)) {
+    if (stat(path, &_stat) == -1 || !S_ISREG(_stat.st_mode))
         return 0;
-    }
 
     return _stat.st_size;
 }
 
 int read_file(const char *file_name, char *buffer, size_t size) {
-    FILE *file;
-    file = fopen(file_name, "r");
+    FILE *file = fopen(file_name, "r");
 
-    if (file == NULL) {
+    if (file == NULL)
         return -1;
-    } else if (fread(buffer, 1, size, file) != size) {
+    else if (fread(buffer, 1, size, file) != size)
         return -2;
-    }
 
     fclose(file);
     return 0;

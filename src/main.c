@@ -3,54 +3,52 @@
 //    (See accompanying file LICENSE or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include <stdlib.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "cnidus.h"
 
 #define PORT 1337
 #define ENTRIES 256
 
-#define true 1
-#define false 0
-
-static void home(context *ctx) {
+static void home(context_t *ctx) {
     const char *res = "welcome to cnidus!";
     respond(ctx, res, sizeof(res), OK, txt, false);
 }
 
-static void license(context *ctx) {
+static void license(context_t *ctx) {
     const char *file_name = "LICENSE";
     int ret = file_exists(file_name);
 
     if (!ret) {
         respond_not_found(ctx->socket);
     } else {
-        /* calloc is used because we don't want to return data 
+        /* calloc is used because we don't want to return data
          in the memory we shouldn't have returned. */
         char *buffer = calloc(1, ret);
 
         // you should handle possible errors from the return of read_file
         read_file(file_name, buffer, ret);
-        
+
         respond(ctx, buffer, ret, OK, txt, true);
         free(buffer);
     }
 }
 
-static void post(context *ctx) { 
+static void post(context_t *ctx) {
     printf("received: %s\n", ctx->data);
     respond(ctx, "hello", 6, OK, txt, false);
 }
 
-static void headers(context *ctx) {
+static void headers(context_t *ctx) {
     // 30 rows, 2 columns
-    char ***array = create_2d_string_array(30, 2, sizeof(char*));
+    char ***array = create_2d_string_array(30, 2, sizeof(char *));
     headers_to_array(ctx->request_headers, ctx->request_headers_len, array);
 
-    char *buffer = calloc(30 * 2, sizeof(char*));
-    
+    char *buffer = calloc(30 * 2, sizeof(char *));
+
     for (size_t i = 0; i < ctx->request_headers_len; i++) {
         strcat(buffer, array[i][0]);
         strcat(buffer, ": ");
