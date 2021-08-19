@@ -1,4 +1,4 @@
-CFLAGS ?= -O2 -Wall -Wextra -Wfloat-equal -Wundef -Wcast-align -Wwrite-strings -Wlogical-op -Wmissing-declarations -Wredundant-decls -Wshadow -luring
+CFLAGS ?= -g -Wall -Wextra -Wfloat-equal -Wundef -Wcast-align -Wwrite-strings -Wlogical-op -Wmissing-declarations -Wredundant-decls -Wshadow -luring
 LFLAGS ?= -shared
 
 SRC := src
