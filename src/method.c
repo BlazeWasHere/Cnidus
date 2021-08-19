@@ -41,8 +41,6 @@ int handle_http_method(char *path, int socket, struct sockaddr_in *client,
         if (ret != NULL) {
             context_t *ctx = calloc(1, sizeof(context_t));
 
-            ctx->request_headers =
-                calloc(metadata->headers_len, sizeof(struct phr_header));
             memcpy(ctx->request_headers, metadata->headers,
                    sizeof(metadata->headers));
             ctx->request_headers_len = metadata->headers_len;
