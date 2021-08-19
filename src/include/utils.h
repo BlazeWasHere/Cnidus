@@ -33,7 +33,7 @@ void sigint_handler(int signal);
  */
 http_metadata *parse_http_line(char *http_line);
 /**
- * Convert char to lower, by modifying the pointer
+ * Convert a string to lower, by modifying the pointer
  */
 void to_lower(char *str);
 /**
