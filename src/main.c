@@ -56,11 +56,9 @@ static void headers(context_t *ctx) {
         strcat(buffer, "\n");
     }
 
-    ctx->response_headers = calloc(1, sizeof(struct headers));
     add_header(ctx, "foo", "bar");
-
     strcat(buffer, "\nadded the header `foo:bar` to the request");
-    // respond will internally free the alloc'd memory in ctx->response_headers
+
     respond(ctx, buffer, strlen(buffer), OK, txt, false);
 
     free_2d_string_array(array, 30);
