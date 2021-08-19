@@ -25,14 +25,19 @@ char *create_header_string(char *header, char *value) {
 void add_header(context_t *ctx, const char *header, const char *value) {
     ctx->response_headers[ctx->response_headers_count].header = strdup(header);
     ctx->response_headers[ctx->response_headers_count].value = strdup(value);
-
     ctx->response_headers_count++;
 }
 
 void headers_to_array(struct phr_header headers[], size_t headers_len,
                       char ***array) {
     for (size_t i = 0; i < headers_len; i++) {
-        char *key = calloc(1, headers[i].name_len);
+        char *key = NULL;
+
+        // allocate size, whichever is higher
+        if (headers[i].name_len > headers[i].value_len)
+            key = calloc(sizeof(char), headers[i].name_len + 1);
+        else
+            key = calloc(sizeof(char), headers[i].value_len + 1);
 
         sprintf(key, "%.*s", (int)headers[i].name_len, headers[i].name);
         to_lower(key);
