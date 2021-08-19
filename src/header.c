@@ -32,7 +32,12 @@ void add_header(context_t *ctx, const char *header, const char *value) {
 void headers_to_array(struct phr_header headers[], size_t headers_len,
                       char ***array) {
     for (size_t i = 0; i < headers_len; i++) {
-        char *key = calloc(1, headers[i].name_len);
+        char *key = NULL;
+
+        if (headers[i].name_len > headers[i].value_len)
+            key = calloc(1, headers[i].name_len);
+        else
+            key = calloc(1, headers[i].value_len);
 
         sprintf(key, "%.*s", (int)headers[i].name_len, headers[i].name);
         to_lower(key);

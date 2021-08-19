@@ -56,6 +56,7 @@ static void headers(context_t *ctx) {
         strcat(buffer, "\n");
     }
 
+    ctx->response_headers = calloc(1, sizeof(struct headers));
     add_header(ctx, "foo", "bar");
     strcat(buffer, "\nadded the header `foo:bar` to the request");
 

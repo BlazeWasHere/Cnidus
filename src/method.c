@@ -44,7 +44,7 @@ int handle_http_method(char *path, int socket, struct sockaddr_in *client,
             ctx->request_headers =
                 calloc(metadata->headers_len, sizeof(struct phr_header));
             memcpy(ctx->request_headers, metadata->headers,
-                   sizeof(metadata->headers));
+                   metadata->headers_len * sizeof(struct phr_header));
             ctx->request_headers_len = metadata->headers_len;
             ctx->response_headers_count = 0;
             ctx->method = metadata->method;
@@ -65,6 +65,7 @@ int handle_http_method(char *path, int socket, struct sockaddr_in *client,
             else
                 respond_not_implemented(socket);
 
+            free(ctx->request_headers);
             free(ctx);
         } else {
             // 404

@@ -41,7 +41,7 @@ http_metadata *parse_http_line(char *http_line) {
     // now snprintf() to "correct" the variables
     snprintf(data->method, method_len + 1, "%.*s", (int)method_len, method);
     snprintf(data->path, path_len + 1, "%.*s", (int)path_len, path);
-    snprintf(data->version, sizeof("HTTP"), "HTTP/1.%d", version);
+    snprintf(data->version, sizeof("HTTP/1.x"), "HTTP/1.%d", version);
 
     // pointer arithmetic; `data->ret` returns the position where headers end
     data->data = (char *)method + data->ret;
