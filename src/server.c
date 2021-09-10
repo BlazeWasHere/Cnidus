@@ -50,7 +50,7 @@ int setup_socket(int port) {
     address.sin_addr.s_addr = htonl(INADDR_ANY);
 
     ret = bind(sock, (struct sockaddr *)&address, sizeof(address));
-    error("bind", ret, 1);
+    error("bind", ret, -1);
 
     ret = listen(sock, BACKLOG);
     error("listen", ret, -1);
