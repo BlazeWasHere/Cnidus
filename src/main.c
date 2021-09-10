@@ -26,8 +26,9 @@ static void license(context_t *ctx) {
         respond_not_found(ctx->socket);
     } else {
         /* calloc is used because we don't want to return data
-         in the memory we shouldn't have returned. */
-        char *buffer = calloc(1, ret);
+         in the memory we shouldn't have returned.
+         And + 1 (sizeof(char)) for the trailing '\0' */
+        char *buffer = calloc(1, ret + 1);
 
         // you should handle possible errors from the return of read_file
         read_file(file_name, buffer, ret);
