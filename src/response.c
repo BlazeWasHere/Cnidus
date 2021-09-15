@@ -12,7 +12,7 @@
 #include "header.h"
 #include "status.h"
 
-#define SERVER_STR "Server: Cnidus/0.2.1\r\n"
+#define SERVER_STR "Server: Cnidus/0.2.2\r\n"
 
 _cache_t routes_cache;
 

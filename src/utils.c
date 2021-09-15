@@ -27,7 +27,8 @@ http_metadata *parse_http_line(char *http_line) {
     http_metadata *data = calloc(1, sizeof(http_metadata));
     size_t method_len, path_len;
     const char *method, *path;
-    int version;
+    int version, i = 0;
+    char *token, *_path;
 
     data->headers_len = sizeof(data->headers) / sizeof(data->headers[0]);
     data->ret = phr_parse_request(http_line, strlen(http_line), &method,
@@ -36,15 +37,25 @@ http_metadata *parse_http_line(char *http_line) {
 
     data->version = calloc(1, sizeof("HTTP/1.x"));
     data->method = calloc(1, method_len + 1);
-    data->path = calloc(1, path_len + 1);
+    _path = calloc(1, path_len + 1);
 
     // now snprintf() to "correct" the variables
     snprintf(data->method, method_len + 1, "%.*s", (int)method_len, method);
-    snprintf(data->path, path_len + 1, "%.*s", (int)path_len, path);
+    snprintf(_path, path_len + 1, "%.*s", (int)path_len, path);
     snprintf(data->version, sizeof("HTTP/1.x"), "HTTP/1.%d", version);
 
     // pointer arithmetic; `data->ret` returns the position where headers end
     data->data = (char *)method + data->ret;
+
+    while ((token = strsep(&_path, "?"))) {
+        if (i == 0)
+            data->path = strdup(token);
+        else if (i == 1)
+            // TODO(blaze): This breaks if there is more than 1 `?`
+            data->query_params = strdup(token);
+
+        i++;
+    }
 
     return data;
 }

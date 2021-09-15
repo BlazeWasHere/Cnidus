@@ -17,6 +17,7 @@ typedef struct {
     struct phr_header headers[30];
     size_t headers_len; /* Amount of headers in the request, e.g 10 */
     char *data;         /* request body data, e.g "foo=bar" */
+    char *query_params; /* URL query parameters */
 } http_metadata;
 
 /**

@@ -17,4 +17,4 @@
 #include "status.h"
 #include "utils.h"
 
-const char *CNIDUS_VERSION = "0.2.1";
+const char *CNIDUS_VERSION = "0.2.2";
