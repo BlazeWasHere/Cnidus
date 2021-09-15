@@ -85,6 +85,9 @@ int handle_http_method(char *path, int socket, struct sockaddr_in *client,
         add_write_request(req);
     }
 
+    if (metadata->query_params != NULL)
+        free(metadata->query_params);
+
     free(metadata->version);
     free(metadata->method);
     free(metadata->path);
