@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <ctype.h>
+#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,7 +15,7 @@
 
 void error(const char *str, int ret, int code) {
     if (ret == code)
-        perror(str);
+        err(EXIT_FAILURE, str);
 }
 
 void sigint_handler(int signal) {
@@ -98,4 +99,3 @@ void free_2d_string_array(char ***array, size_t rows) {
 
     free(array);
 }
-
