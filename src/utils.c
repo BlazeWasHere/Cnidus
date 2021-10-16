@@ -11,6 +11,7 @@
 
 #include "utils.h"
 
+#include "method.h"
 #include "server.h"
 
 void error(const char *str, int ret, int code) {
@@ -98,4 +99,28 @@ void free_2d_string_array(char ***array, size_t rows) {
     }
 
     free(array);
+}
+
+size_t get_methods_for_path(dict_t *routes, char *path, http_method_t *ret) {
+    static http_method_t all_http_methods[] = {GET, POST, HEAD, PUT};
+    // Bit of a hackish hardcode here, longest HTTP method is 4 chars long.
+    char *key = calloc(1, strlen(path) + 4 + 1);
+    size_t count = 0;
+
+    for (size_t i = 0; i < sizeof(all_http_methods) / sizeof(http_method_t);
+         i++) {
+        // Copy the const char pointer so we can edit it without SIGSEGV.
+        char *method = strdup(http_method_to_string(all_http_methods[i]));
+        to_lower(method);
+        concat(method, path, key);
+
+        if (dict_find(*routes, key) != NULL)
+            ret[count++] = all_http_methods[i];
+
+        // 'Reset' key to not intefere with future concat()s
+        memset(key, '0', strlen(key));
+        free(method);
+    }
+
+    return count;
 }

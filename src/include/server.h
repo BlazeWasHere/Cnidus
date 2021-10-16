@@ -39,6 +39,7 @@ struct request {
 
 // current supported HTTP methods
 typedef enum {
+    UNKNOWN = -1,
     GET,
     POST,
     HEAD,

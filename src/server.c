@@ -159,11 +159,13 @@ int add_route(http_method_t method, const char *path, callback_t value) {
         return -1;
     }
 
-    const char *method_str = http_method_to_string(method);
+    char *method_str = strdup(http_method_to_string(method));
     char *key = calloc(1, strlen(path) + strlen(method_str) + 1);
+    to_lower(method_str);
     concat((char *)method_str, (char *)path, key);
 
     dict_add(routes, key, value);
+    free(method_str);
     free(key);
 
     // add HEAD support on GET routes
@@ -174,6 +176,11 @@ int add_route(http_method_t method, const char *path, callback_t value) {
         dict_add(routes, key, value);
         free(key);
     }
+
+    // All methods support OPTIONS.
+    key = calloc(1, strlen(path) + sizeof("options") + 1);
+    concat((char *)"options", (char *)path, key);
+    free(key);
 
     return 0;
 }

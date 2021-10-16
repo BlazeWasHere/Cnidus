@@ -38,7 +38,7 @@ static void license(context_t *ctx) {
     }
 }
 
-static void post(context_t *ctx) {
+static void post_echo(context_t *ctx) {
     printf("received: %s\n", ctx->data);
     respond(ctx, "hello", 6, OK, txt, false);
 }
@@ -80,8 +80,8 @@ int main() {
 
     add_route(GET, "/", home);
     add_route(GET, "/license", license);
-    add_route(POST, "/post", post);
-    add_route(GET, "/post", post);
+    add_route(POST, "/post", post_echo);
+    add_route(GET, "/post", post_echo);
     add_route(GET, "/headers", headers);
 
     printf("Listening at http://localhost:%d\n", PORT);

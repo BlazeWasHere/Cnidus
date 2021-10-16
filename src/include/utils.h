@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "dict.h"
 #include "picohttpparser.h"
 
 typedef struct {
@@ -58,3 +59,9 @@ char ***create_2d_string_array(size_t rows, size_t columns, size_t elem_size);
  * To clear the array created from `create_2d_string_array(...)`
  */
 void free_2d_string_array(char ***array, size_t rows);
+
+/**
+ * Fill `ret` with all http methods for `path` which is in `routes` and return
+ * the amount written in `ret`
+ */
+size_t get_methods_for_path(dict_t *routes, char *path, http_method_t *ret);

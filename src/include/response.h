@@ -52,3 +52,6 @@ int cache_find_index(char *route);
 
 /* respond with 501 NOT IMPLEMENTED to the socket */
 void respond_not_implemented(int socket);
+
+/* respond with 405 METHOD NOT ALLOWED to the socket */
+void respond_not_allowed(int socket);

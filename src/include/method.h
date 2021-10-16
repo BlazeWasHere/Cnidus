@@ -32,3 +32,7 @@ void post(context_t *ctx, callback_t callback);
  * handle the PUT http method.
  */
 void put(context_t *ctx, callback_t callback);
+/**
+ * handle the OPTIONS http method.
+ */
+void options(context_t *ctx, http_method_t *methods, size_t methods_len);

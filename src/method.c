@@ -3,6 +3,7 @@
 //    (See accompanying file LICENSE or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -10,6 +11,7 @@
 #include "method.h"
 
 #include "dict.h"
+#include "header.h"
 #include "response.h"
 #include "server.h"
 #include "utils.h"
@@ -35,10 +37,15 @@ int handle_http_method(char *path, int socket, struct sockaddr_in *client,
     int idx = cache_find_index(key);
 
     if (idx == -1) {
-        // call the callback
-        callback_t ret = dict_find(*routes, key);
+        // We should not expect more than 4.
+        http_method_t *methods = calloc(sizeof(http_method_t), 4);
+        size_t methods_len =
+            get_methods_for_path(routes, metadata->path, methods);
 
-        if (ret != NULL) {
+        if (methods_len != 0) {
+            // call the callback
+            callback_t ret = dict_find(*routes, key);
+
             context_t *ctx = calloc(1, sizeof(context_t));
 
             ctx->request_headers =
@@ -54,23 +61,31 @@ int handle_http_method(char *path, int socket, struct sockaddr_in *client,
             ctx->socket = socket;
             ctx->__key = key;
 
-            if (strcmp(metadata->method, "get") == 0)
-                get(ctx, ret);
-            else if (strcmp(metadata->method, "post") == 0)
-                post(ctx, ret);
-            else if (strcmp(metadata->method, "head") == 0)
-                get(ctx, ret);
-            else if (strcmp(metadata->method, "put") == 0)
-                put(ctx, ret);
-            else
-                respond_not_implemented(socket);
+            if (strcmp(metadata->method, "options") == 0)
+                options(ctx, methods, methods_len);
+            else if (ret != NULL) {
+                if (strcmp(metadata->method, "get") == 0)
+                    get(ctx, ret);
+                else if (strcmp(metadata->method, "post") == 0)
+                    post(ctx, ret);
+                else if (strcmp(metadata->method, "head") == 0)
+                    get(ctx, ret);
+                else if (strcmp(metadata->method, "put") == 0)
+                    put(ctx, ret);
+                else
+                    respond_not_implemented(socket);
+            } else {
+                respond_not_allowed(socket);
+            }
 
             free(ctx->request_headers);
             free(ctx);
+
         } else {
-            // 404
             respond_not_found(socket);
         }
+
+        free(methods);
 
     } else {
         struct request *req = malloc(sizeof(*req) + sizeof(struct iovec));
@@ -100,13 +115,13 @@ int handle_http_method(char *path, int socket, struct sockaddr_in *client,
 const char *http_method_to_string(http_method_t method) {
     switch (method) {
     case GET:
-        return "get";
+        return "GET";
     case POST:
-        return "post";
+        return "POST";
     case HEAD:
-        return "head";
+        return "HEAD";
     case PUT:
-        return "put";
+        return "PUT";
     default:
         return NULL;
     }
@@ -117,3 +132,22 @@ void get(context_t *ctx, callback_t callback) { callback(ctx); }
 void post(context_t *ctx, callback_t callback) { callback(ctx); }
 
 void put(context_t *ctx, callback_t callback) { callback(ctx); }
+
+void options(context_t *ctx, http_method_t *methods, size_t methods_len) {
+    // Assume all `methods` are no longer than 4 chars and 2 chars for ', '
+    // ... bad assumption but oh well.
+    char *ret = calloc(1, methods_len * 6 + 1);
+
+    for (size_t i = 0; i < methods_len; i++) {
+        if (i != 0)
+            strcat(ret, ", ");
+
+        strcat(ret, http_method_to_string(methods[i]));
+    }
+
+    ctx->response_headers = calloc(1, sizeof(struct headers));
+    add_header(ctx, "allow", ret);
+
+    respond(ctx, "", 0, OK, null, true);
+    free(ret);
+}
