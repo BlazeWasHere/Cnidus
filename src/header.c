@@ -35,9 +35,9 @@ void headers_to_array(struct phr_header headers[], size_t headers_len,
         char *key = NULL;
 
         if (headers[i].name_len > headers[i].value_len)
-            key = calloc(1, headers[i].name_len);
+            key = calloc(1, headers[i].name_len + 1);
         else
-            key = calloc(1, headers[i].value_len);
+            key = calloc(1, headers[i].value_len + 1);
 
         sprintf(key, "%.*s", (int)headers[i].name_len, headers[i].name);
         to_lower(key);
