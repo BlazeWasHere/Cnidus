@@ -123,5 +123,6 @@ size_t get_methods_for_path(dict_t *routes, char *path, http_method_t *ret) {
         free(method);
     }
 
+    free(key);
     return count;
 }
