@@ -59,6 +59,7 @@ http_metadata *parse_http_line(char *http_line) {
         i++;
     }
 
+    free(_path);
     return data;
 }
 
