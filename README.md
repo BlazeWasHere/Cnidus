@@ -7,7 +7,7 @@ Cnidus is a web framework in C based on [liburing](https://github.com/axboe/libu
 
 Cnidus is still a work in progress, and is **not** production ready, as it probably contains a ton of bugs. An example of usage can be found [here](https://github.com/BlazeWasHere/Cnidus/blob/master/src/main.c).
 
-Cnidus aims to be a simple interface to create REST APISs and static file serving, using an asynchronous I/O framework as the backend. A quick example:
+Cnidus aims to be a simple interface to create REST APIs and static file serving, using an asynchronous I/O framework as the backend. A quick example:
 
 ```c
 #include <signal.h>
